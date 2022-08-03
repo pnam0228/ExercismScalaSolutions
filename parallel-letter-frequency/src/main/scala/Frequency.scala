@@ -7,8 +7,8 @@ object Frequency {
     val chars = texts.flatten.filter(_.isLetter).map(_.toLower)
     val workChunks = chars.grouped(1 max chars.length / numWorkers).toList
     val charCountListsF = workChunks.map(charMapAsync)
-    val charCountMapF = Future.foldLeft(charCountListsF)(Map.empty[Char, Int]){ case (charCountMap, y) =>
-      y.foldLeft(charCountMap){ case (charIntMap, (c, count)) =>
+    val charCountMapF = Future.foldLeft(charCountListsF)(Map.empty[Char, Int]){ case (charCountMap, charIntList) =>
+      charIntList.foldLeft(charCountMap){ case (charIntMap, (c, count)) =>
         charIntMap.updatedWith(c) {
           case Some(acc) => Some(acc + count)
           case None => Some(count)
